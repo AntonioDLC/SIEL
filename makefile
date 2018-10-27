@@ -10,4 +10,5 @@ SIEL.o : fileToString.h
 fileToString.o : fileToString.h
 
 clean:
+	rm SIEL
 	rm *.o
