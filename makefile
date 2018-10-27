@@ -1,5 +1,6 @@
 CC = gcc
-VPATH = ../FileToString
+CFLAGS = 
+VPATH = FileToString
 OBJS = SIEL.o fileToString.o
 
 SIEL : $(OBJS)
@@ -7,3 +8,6 @@ SIEL : $(OBJS)
 
 SIEL.o : fileToString.h
 fileToString.o : fileToString.h
+
+clean:
+	rm *.o

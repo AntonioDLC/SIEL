@@ -1,4 +1,4 @@
-#include "../FileToString/fileToString.h"
+#include "FileToString/fileToString.h"
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -15,54 +15,96 @@ typedef struct
 Matrix * fileToMatrixAB(char *path)
 {
 	Matrix * matrix;
+	// OBTENER ARCHIVO COMPLETO COMO UN STRING
 	char * fileContents = fileToString(path);
-	puts(fileContents);
 
 	char * token;
+	// DIVIDIR EL CONTENIDO DEL ARCHIVO EN VARIAS CADENAS
+	// LAS CADENAS SE OBTIENEN SEPARANDO EL CONTENIDO DEL
+	// ARCHIVO POR EL CARACTER TABULACION
 	token = strtok(fileContents, "\t");
 	
 	float * fila = malloc(128);
-	int i = 0, j;
+	int i = 0, j = 0, firstTime = 1;
 	char *pos;
-	MatrixData mAB = malloc(128);
-	for( j = 0; token != NULL; )
+	MatrixData mAB = (MatrixData)malloc(128);
+	matrix = (Matrix*)malloc( sizeof(Matrix) );
+
+	while( token != NULL )
 	{
-		printf("<%s>\n",token);
+		// SI LLEGUE AL FINAL DE LA FILA
 		if(pos = strchr(token, '\n') )
 		{
+			// SI ES LA PRIMERA VEZ QUE LLEGO
+			if(firstTime)
+			{
+				// GUARDO EL NRO DE COLUMNAS ACUMULADO
+				matrix->columns = j+1;
+				firstTime = 0;
+			}
+
+			// TOMO LA PRIMERA PARTE DEL TOKEN
+			// COMO VALOR ULTIMO DE LA FILA
 			*pos = '\0';
 			fila[j] = atof(token);
-			printf("fil : %g\n", fila[j]);
-			mAB[i] = realloc(fila, sizeof(float)*(j+1));
-			fila = malloc(128);
+
+			// GUARDO LA FILA EN EL ESPACIO JUSTO
+			mAB[i] = (float*)realloc(fila, sizeof(float)*(j+1));
+
+			// INICIALIZO LAS VARIABLES NECESARIAS
+			// PARA UNA NUEVA ITERACION DE FILA
+			fila = (float*)malloc(128);
 			j = 0;
+
+			// INCREMENTO EL NRO DE FILAS EN UNO
 			i++;
+
+			// TOMO LA SEGUNDA PARTE DEL TOKEN
+			// COMO VALOR PRIMERO DE LA NUEVA FILA
 			fila[j++] = atof(pos + 1);
 		}
+		// SI EL TOKEN NO ES UN CARACTER PIPE
 		else if( strcmp(token, "|") )
+			// TOMO EL VALOR DEL TOKEN
+			// COMO VALOR DE POSICION J DE LA FILA ACTUAL
 			fila[j++] = atof(token);
 
-		printf("fil : %g\n", fila[j-1]);
+		// OBTENGO LA SIGUIENTE CADENA LUEGO DE LA TABULACION
 		token = strtok(NULL, "\t");
 	}
 
+	// GUARDO LA ULTIMA FILA EN EL ESPACIO JUSTO
 	mAB[i] = realloc(fila, sizeof(float)*j);
-	i++;
 
+	// GUARDO LOS PUNTEROS A FILAS EN EL ESPACIO JUSTO
 	mAB = realloc(mAB, sizeof(float*)*i);
 
-	matrix = malloc( sizeof(Matrix) );
+	// GUARDO EL NRO DE FILAS ACUMULADO
 	matrix->rows = i;
-	matrix->columns = j;
+
+	// GUARDO EL VECTOR DE PUNTEROS A FILAS
 	matrix->data = mAB;
+
 	return matrix;
 }
-	
+
+void freeMatrix(Matrix * m)
+{
+	int i;
+
+	// LIBERAR CADA FILA
+	for( i=0; i < m->rows; i++)
+		free(m->data[i]);
+
+	// LIBERAR ESTRUCTURA Y SUS VALORES
+	free(m);
+}
+
 void printMatrix(Matrix * m)
 {
 	int i, j;
 
-	printf("It is a %d x %d matrix\n", m->rows, m->columns);
+	printf("Es una matriz de %d x %d\n", m->rows, m->columns);
 
 	for(i = 0; i < m->rows; i++ )
 	{
@@ -72,12 +114,20 @@ void printMatrix(Matrix * m)
 	}
 }
 
-int main(void)
+int main(int argc, char * argv[])
 {
-	Matrix * mAB;
+	if( argc != 2 )
+	{
+		puts(	"Modo de uso:\n"
+			"\t./SIEL <matrizAB.txt>\n");
 
-	mAB = fileToMatrixAB("matrizAB.txt");
+		return -1;
+	}
+
+	Matrix * mAB;
+	mAB = fileToMatrixAB(argv[1]);
 	printMatrix(mAB);
+	freeMatrix(mAB);
 
 	return 0;
 }
