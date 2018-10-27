@@ -35,14 +35,6 @@ Matrix * fileToMatrixAB(char *path)
 		// SI LLEGUE AL FINAL DE LA FILA
 		if(pos = strchr(token, '\n') )
 		{
-			// SI ES LA PRIMERA VEZ QUE LLEGO
-			if(firstTime)
-			{
-				// GUARDO EL NRO DE COLUMNAS ACUMULADO
-				matrix->columns = j+1;
-				firstTime = 0;
-			}
-
 			// TOMO LA PRIMERA PARTE DEL TOKEN
 			// COMO VALOR ULTIMO DE LA FILA
 			*pos = '\0';
@@ -72,18 +64,20 @@ Matrix * fileToMatrixAB(char *path)
 		// OBTENGO LA SIGUIENTE CADENA LUEGO DE LA TABULACION
 		token = strtok(NULL, "\t");
 	}
+	// GUARDO EL NRO DE FILAS Y COLUMNAS ACUMULADO
+	matrix->columns = j;
+	matrix->rows = ++i;
 
 	// GUARDO LA ULTIMA FILA EN EL ESPACIO JUSTO
-	mAB[i] = realloc(fila, sizeof(float)*j);
+	mAB[matrix->rows - 1] = realloc(fila, sizeof(float)*matrix->columns);
 
 	// GUARDO LOS PUNTEROS A FILAS EN EL ESPACIO JUSTO
-	mAB = realloc(mAB, sizeof(float*)*i);
-
-	// GUARDO EL NRO DE FILAS ACUMULADO
-	matrix->rows = i;
+	mAB = realloc(mAB, sizeof(float*)*matrix->rows);
 
 	// GUARDO EL VECTOR DE PUNTEROS A FILAS
 	matrix->data = mAB;
+
+	free(fileContents);
 
 	return matrix;
 }

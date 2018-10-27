@@ -12,16 +12,15 @@ char * fileToString(const char *path)
 
 	fseek(f, 0, SEEK_END);
 	size = ftell(f);
-	contents = (char*)malloc(size + 1);
+	contents = (char*)malloc(size);
 
 	fseek(f, 0, SEEK_SET);
-	fread(contents, size + 1, 1, f);
-
+	fread(contents, size+1, 1, f);
 
 	if( feof(f) )
 	{
 		unsigned int lastPos = ftell(f);
-		contents[lastPos] = '\0';
+		contents[lastPos-1] = '\0';
 		fclose(f);
 		return contents;
 	}

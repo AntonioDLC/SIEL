@@ -1,5 +1,9 @@
-fileToString: fileToString.h
-	gcc -c fileToString.c
+test: fileToString.o test.o
+	gcc -o test test.o fileToString.o
 
-test: fileToString.h
-	gcc -o test test.c fileToString.o
+test.o: fileToString.h
+fileToString.o: fileToString.h
+
+clean:
+	rm *.o
+	rm test
