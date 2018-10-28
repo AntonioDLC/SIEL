@@ -7,6 +7,43 @@
 #include <ctype.h>
 #include <math.h>
 
+Matrix * matrix_new( int rows, int columns )
+{
+	Matrix * m = malloc( sizeof(Matrix) );
+	m->rows = rows;
+	m->columns = columns;
+
+	m->data = calloc( m->rows, sizeof(float*) );
+
+	int i;
+	for( i = 0; i < m->rows; i++)
+		m->data[i] = calloc( m->columns, sizeof(float) );
+
+	return m;
+}
+
+Matrix * matrix_mult( Matrix * m1, Matrix * m2 )
+{
+	if( m1->columns != m2->rows )
+		return NULL;
+
+	Matrix * rtdo;
+	rtdo = matrix_new( m1->rows, m2->columns );
+
+	int i, j, k;
+	for( i = 0; i < rtdo->rows; i++ )
+		for( j = 0; j < rtdo->columns; j++ )
+		{
+			float sum = 0;
+			for( k = 0; k < m2->rows; k++ )
+				sum += m1->data[i][k]*m2->data[k][j];
+
+			rtdo->data[i][j] = sum;
+		}
+
+	return rtdo;
+}
+
 int elem_esDominante( Matrix * m, int fila, int col)
 {
 	int i, sum = 0, elem = m->data[fila][col];

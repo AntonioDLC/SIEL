@@ -33,12 +33,9 @@ int main(int argc, char * argv[])
 		return -1;
 	}
 
-	Matrix *mAB, *mA, *mB;
+	Matrix *mAB, *mA, *mB, *rtdo;
 	mAB = fileToMatrix(argv[1]);
 	getABfromMatrix(mAB, &mA, &mB);
-
-	puts("Matrix AB:");
-	printMatrix(mAB);
 
 	puts("\nMatrix A:");
 	printMatrix(mA);
@@ -46,10 +43,15 @@ int main(int argc, char * argv[])
 
 	puts("\nMatrix B:");
 	printMatrix(mB);
+	printDom(mB);
+
+	puts("\nMatrix A*B:");
+	printMatrix(rtdo=matrix_mult(mA, mB));
 
 	freeMatrix(mAB);
 	freeMatrix(mA);
 	freeMatrix(mB);
+	freeMatrix(rtdo);
 
 	return 0;
 }
