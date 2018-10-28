@@ -10,8 +10,12 @@ typedef struct
 		int columns;
 	} Matrix;
 
-char * fileToMatrix(char * path);
+typedef enum{ NO_DOMINANTE, SIMPLE, ESTRICTA} Dominancia;
+
+Matrix * fileToMatrix(char * path);
+void getABfromMatrix(Matrix * m, Matrix ** a, Matrix ** b);
 void printMatrix(Matrix * m);
 void freeMatrix(Matrix * m);
+int diagonalmenteDominante(Matrix * m);
 
 #endif

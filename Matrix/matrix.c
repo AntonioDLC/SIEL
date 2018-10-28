@@ -1,10 +1,116 @@
+#include "../Array/array.h"
 #include "matrix.h"
 #include "../FileToString/fileToString.h"
 #include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <math.h>
 
-Matrix * fileToMatrixAB(char *path)
+int elem_esDominante( Matrix * m, int fila, int col)
+{
+	int i, sum = 0, elem = m->data[fila][col];
+
+	for( i = 0; i < m->columns; i++ )
+		if( col != i )
+			sum += fabsf(m->data[fila][i]);
+
+	if( elem >= sum )
+	{
+		if( elem > sum )
+			return ESTRICTA;
+		else
+			return SIMPLE;
+	}
+	else
+		return NO_DOMINANTE;
+}
+			
+
+int fila_getDominante( Matrix * m, int fila, float * dom, float * col)
+{
+	int i, tipoDom;
+	for(i = 0; i < m->columns; i++)
+	{
+		if( tipoDom = elem_esDominante(m, fila, i) )
+		{
+			*dom = m->data[fila][i];
+			*col = i;
+			return tipoDom;
+		}
+	}
+
+	*dom = -1;
+	*col = -1;
+
+	return NO_DOMINANTE;
+}
+
+int diagonalmenteDominante(Matrix * m)
+{
+	float escalarDom, nroColumna;
+	Dominancia tipoDomFila, tipoDomMatriz = ESTRICTA;
+	Array * columnasDominantes = array_new(sizeof(int));
+
+	int i;
+	for( i = 0; i < m->rows; i++ )
+	{
+		tipoDomFila = fila_getDominante(m, i, &escalarDom, &nroColumna);
+
+		if(!array_contains(columnasDominantes, &nroColumna))
+		{
+			array_add(columnasDominantes, &nroColumna);
+			if(tipoDomFila == SIMPLE)
+				tipoDomMatriz = SIMPLE;
+		}
+		else
+		{
+			tipoDomMatriz = NO_DOMINANTE;
+			break;
+		}
+	}
+	array_free(columnasDominantes);
+
+	return tipoDomMatriz;
+}
+
+Matrix * matrix_subcopy(Matrix * m, int xi, int yi, int dx, int dy)
+{
+	Matrix * subcopy = calloc(1, sizeof(Matrix));
+
+	subcopy->rows = dy;
+	subcopy->columns = dx;
+
+	subcopy->data = (MatrixData)malloc( subcopy->rows*sizeof(float*) );
+	int i;
+	for( i = 0; i < subcopy->rows; i++)
+		subcopy->data[i]=(float*)malloc(subcopy->columns*sizeof(float));
+
+	int j;
+	for( i = 0; i < subcopy->rows; i++)
+		for( j = 0; j < subcopy->columns; j++)
+			subcopy->data[i][j] = m->data[yi + i][xi + j];
+
+	return subcopy;
+}
+
+int isMatrixAB(Matrix * m)
+{
+	return m->rows == m->columns - 1;
+}
+
+void getABfromMatrix(Matrix * m, Matrix ** a, Matrix ** b)
+{
+	if( !isMatrixAB(m) )
+	{
+		puts("La matriz no puede descomponerse en las de un SEL");
+		return;
+	}
+	*a = matrix_subcopy(m, 0, 0, m->rows, m->rows);
+	*b = matrix_subcopy(m, m->columns-1, 0, 1, m->rows);
+}
+
+Matrix * fileToMatrix(char *path)
 {
 	Matrix * matrix;
 	// OBTENER ARCHIVO COMPLETO COMO UN STRING
