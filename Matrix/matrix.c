@@ -15,9 +15,9 @@ int elem_esDominante( Matrix * m, int fila, int col)
 		if( col != i )
 			sum += fabsf(m->data[fila][i]);
 
-	if( elem >= sum )
+	if( fabsf(elem) >= sum )
 	{
-		if( elem > sum )
+		if( fabsf(elem) > sum )
 			return ESTRICTA;
 		else
 			return SIMPLE;
@@ -57,7 +57,7 @@ int diagonalmenteDominante(Matrix * m)
 	{
 		tipoDomFila = fila_getDominante(m, i, &escalarDom, &nroColumna);
 
-		if(!array_contains(columnasDominantes, &nroColumna))
+		if(tipoDomFila && !array_contains(columnasDominantes, &nroColumna))
 		{
 			array_add(columnasDominantes, &nroColumna);
 			if(tipoDomFila == SIMPLE)
