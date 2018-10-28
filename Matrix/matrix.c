@@ -75,12 +75,26 @@ Matrix * matrix_mult( Matrix * m1, Matrix * m2 )
 		for( j = 0; j < rtdo->columns; j++ )
 		{
 			float sum = 0;
-			for( k = 0; k < m2->rows; k++ )
+			for( k = 0; k < m1->columns; k++ )
 				sum += m1->data[i][k]*m2->data[k][j];
 
 			rtdo->data[i][j] = sum;
 		}
+/*
+	puts("------------------");
 
+	printMatrix(m1);
+
+	puts("MULTIPLICADA CON");
+
+	printMatrix(m2);
+
+	puts("DA COMO RESULTADO");
+
+	printMatrix(rtdo);
+
+	puts("------------------");
+*/
 	return rtdo;
 }
 
@@ -273,7 +287,7 @@ void printMatrix(Matrix * m)
 {
 	int i, j;
 
-	printf("Es una matriz de %d x %d\n", m->rows, m->columns);
+	printf("Una matriz de %d x %d\n", m->rows, m->columns);
 
 	for(i = 0; i < m->rows; i++ )
 	{
