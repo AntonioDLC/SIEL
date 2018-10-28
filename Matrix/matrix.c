@@ -46,6 +46,22 @@ Matrix * matrix_mult_esc( Matrix * m, float esc)
 	return rtdo;
 }
 
+Matrix * matrix_sum( Matrix * m1, Matrix * m2 )
+{
+	if( m1->columns != m2->columns || m1->rows != m2->rows )
+		return NULL;
+
+	Matrix * rtdo;
+	rtdo = matrix_new( m1->rows, m1->columns );
+
+	int i, j;
+	for( i = 0; i < rtdo->rows; i++ )
+		for( j = 0; j < rtdo->columns; j++ )
+			rtdo->data[i][j] = m1->data[i][j] + m2->data[i][j];
+	
+	return rtdo;
+}
+
 Matrix * matrix_mult( Matrix * m1, Matrix * m2 )
 {
 	if( m1->columns != m2->rows )

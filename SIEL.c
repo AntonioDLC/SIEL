@@ -45,19 +45,22 @@ int main(int argc, char * argv[])
 	puts("\nMatrix B:");
 	printMatrix(mB);
 
-	jacobi_getTCfromAB(mA,mB,&mT,&mC);
+/*	jacobi_getTCfromAB(mA,mB,&mT,&mC);
 
 	puts("\nMatrix T:");
 	printMatrix(mT);
 
 	puts("\nMatrix C:");
 	printMatrix(mC);
+*/
+
+	jacobi_solve(mA, mB, matrix_new(mA->rows, 1) );
 
 	freeMatrix(mAB);
 	freeMatrix(mA);
 	freeMatrix(mB);
-	freeMatrix(mT);
-	freeMatrix(mC);
+	//freeMatrix(mT);
+	//freeMatrix(mC);
 
 	return 0;
 }

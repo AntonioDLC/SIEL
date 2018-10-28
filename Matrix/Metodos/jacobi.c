@@ -1,8 +1,13 @@
 #include "../matrix.h"
 
-Matrix * jacobi_Xk( int k, Matrix * mX0, Matrix * mT, Matrix * mC)
+Matrix * jacobi_X(Matrix * mXprev, Matrix * mT, Matrix * mC)
 {
-	return (void*)0;
+	Matrix * Xk, * mTXprev;
+	mTXprev = matrix_mult( mT, mXprev );
+	Xk = matrix_sum( mTXprev, mC);
+	
+	freeMatrix(mTXprev);
+	return Xk;
 }
 
 void jacobi_getTCfromAB( Matrix * mA, Matrix * mB, Matrix ** mT, Matrix ** mC)
@@ -25,4 +30,24 @@ void jacobi_getTCfromAB( Matrix * mA, Matrix * mB, Matrix ** mT, Matrix ** mC)
 
 		(*mC)->data[i][0] = mB->data[i][0] / elem;
 	}
+}
+
+void jacobi_solve(Matrix * mA, Matrix * mB, Matrix * mX0)
+{
+	Matrix *mT, *mC, *mX = mX0, *mXprev;
+
+	jacobi_getTCfromAB(mA,mB,&mT,&mC);
+
+	int i;
+
+	for( i = 0; i < 10; i++ )
+	{
+		printMatrix(mX);
+		mXprev = mX;
+		mX = jacobi_X(mXprev, mT, mC);
+		freeMatrix(mXprev);
+	}
+
+	printMatrix(mX);
+	freeMatrix(mX);
 }
