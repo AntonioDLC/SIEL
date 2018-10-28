@@ -22,6 +22,30 @@ Matrix * matrix_new( int rows, int columns )
 	return m;
 }
 
+Matrix * matrix_div_esc( Matrix * m, float esc)
+{
+	Matrix * rtdo = matrix_new( m->rows, m->columns);
+
+	int i,j;
+	for(i=0; i < m->rows; i++)
+		for(j=0; j < m->columns; j++)
+			rtdo->data[i][j] = m->data[i][j]/esc;
+
+	return rtdo;
+}
+
+Matrix * matrix_mult_esc( Matrix * m, float esc)
+{
+	Matrix * rtdo = matrix_new( m->rows, m->columns);
+
+	int i,j;
+	for(i=0; i < m->rows; i++)
+		for(j=0; j < m->columns; j++)
+			rtdo->data[i][j] = m->data[i][j]*esc;
+
+	return rtdo;
+}
+
 Matrix * matrix_mult( Matrix * m1, Matrix * m2 )
 {
 	if( m1->columns != m2->rows )

@@ -12,7 +12,9 @@ typedef struct
 
 typedef enum{ NO_DOMINANTE, SIMPLE, ESTRICTA} Dominancia;
 
+Matrix * matrix_new(int r, int c);
 Matrix * fileToMatrix(char * path);
+Matrix * matrix_mult_esc( Matrix * m, float esc);
 Matrix * matrix_mult(Matrix *, Matrix *);
 void getABfromMatrix(Matrix * m, Matrix ** a, Matrix ** b);
 void printMatrix(Matrix * m);

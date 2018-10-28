@@ -1,4 +1,5 @@
 #include "Matrix/matrix.h"
+#include "Matrix/Metodos/jacobi.h"
 #include <stdio.h>
 
 void printDom(Matrix * m)
@@ -33,7 +34,7 @@ int main(int argc, char * argv[])
 		return -1;
 	}
 
-	Matrix *mAB, *mA, *mB, *rtdo;
+	Matrix *mAB, *mA, *mB, *mT, *mC, *rtdo;
 	mAB = fileToMatrix(argv[1]);
 	getABfromMatrix(mAB, &mA, &mB);
 
@@ -43,15 +44,20 @@ int main(int argc, char * argv[])
 
 	puts("\nMatrix B:");
 	printMatrix(mB);
-	printDom(mB);
 
-	puts("\nMatrix A*B:");
-	printMatrix(rtdo=matrix_mult(mA, mB));
+	jacobi_getTCfromAB(mA,mB,&mT,&mC);
+
+	puts("\nMatrix T:");
+	printMatrix(mT);
+
+	puts("\nMatrix C:");
+	printMatrix(mC);
 
 	freeMatrix(mAB);
 	freeMatrix(mA);
 	freeMatrix(mB);
-	freeMatrix(rtdo);
+	freeMatrix(mT);
+	freeMatrix(mC);
 
 	return 0;
 }
