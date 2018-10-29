@@ -1,5 +1,25 @@
 #include "../matrix.h"
+#include "metodo.h"
 #include <stdio.h>
+
+Matrix * GS_X(Matrix * mXprev, Matrix * mT, Matrix * mC)
+{
+	Matrix * Xk = matrix_copy(mXprev);
+
+	int i, k;
+	for( i = 0; i < mT->rows; i++)
+	{
+		float sum = 0;
+		for( k = 0; k < mT->columns; k++)
+			sum += mT->data[i][k] * Xk->data[k][0];
+
+		sum += mC->data[i][0];
+
+		Xk->data[i][0] = sum;
+	}
+
+	return Xk;
+}
 
 Matrix * jacobi_X(Matrix * mXprev, Matrix * mT, Matrix * mC)
 {
@@ -11,7 +31,7 @@ Matrix * jacobi_X(Matrix * mXprev, Matrix * mT, Matrix * mC)
 	return Xk;
 }
 
-void jacobi_getTCfromAB( Matrix * mA, Matrix * mB, Matrix ** mT, Matrix ** mC)
+void metodo_getTCfromAB( Matrix * mA, Matrix * mB, Matrix ** mT, Matrix ** mC)
 {
 	*mT = matrix_new( mA->rows, mA->columns);
 	*mC = matrix_new( mB->rows, mB->columns);
@@ -33,11 +53,11 @@ void jacobi_getTCfromAB( Matrix * mA, Matrix * mB, Matrix ** mT, Matrix ** mC)
 	}
 }
 
-void jacobi_solve(Matrix * mA, Matrix * mB, Matrix * mX0)
+void metodo_resolver(Matrix * mA, Matrix * mB, Matrix * mX0, Metodo_X metodo_X)
 {
 	Matrix *mT, *mC, *mX = mX0, *mXprev;
 
-	jacobi_getTCfromAB(mA,mB,&mT,&mC);
+	metodo_getTCfromAB(mA,mB,&mT,&mC);
 
 
 	puts("MATRIZ T:");
@@ -59,7 +79,7 @@ void jacobi_solve(Matrix * mA, Matrix * mB, Matrix * mX0)
 		printMatrix(mX);
 		puts("\n======================");
 		mXprev = mX;
-		mX = jacobi_X(mXprev, mT, mC);
+		mX = metodo_X(mXprev, mT, mC);
 		freeMatrix(mXprev);
 	}
 	puts("\n===RESULTADO FINAL===");

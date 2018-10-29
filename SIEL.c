@@ -1,5 +1,5 @@
 #include "Matrix/matrix.h"
-#include "Matrix/Metodos/jacobi.h"
+#include "Matrix/Metodos/metodo.h"
 #include <stdio.h>
 
 void printDom(Matrix * m)
@@ -54,7 +54,7 @@ int main(int argc, char * argv[])
 	printMatrix(mC);
 */
 
-	jacobi_solve(mA, mB, matrix_new(mA->rows, 1) );
+	metodo_resolver(mA, mB, matrix_new(mA->rows, 1), GS_X);
 
 	freeMatrix(mAB);
 	freeMatrix(mA);

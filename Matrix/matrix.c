@@ -185,6 +185,11 @@ Matrix * matrix_subcopy(Matrix * m, int xi, int yi, int dx, int dy)
 	return subcopy;
 }
 
+Matrix * matrix_copy(Matrix * m)
+{
+	return matrix_subcopy(m, 0, 0, m->columns, m->rows);
+}
+
 int isMatrixAB(Matrix * m)
 {
 	return m->rows == m->columns - 1;
