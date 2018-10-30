@@ -1,31 +1,90 @@
 #include "Matrix/matrix.h"
 #include "Matrix/Metodos/metodo.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-void printDom(Matrix * m)
+char * getUserInput(void)
 {
-	int nivelDom;
-	if( nivelDom = diagonalmenteDominante(m) )
+	char c, * userInput = NULL;
+	int i = 0;
+
+	while( ( c = getchar() ) != '\n' )
 	{
-		switch( nivelDom )
-		{
-			case SIMPLE:
-				puts("Matriz diagonalmente dominante");
-				break;
-			case ESTRICTA:
-				puts("Matrix diag. dom. estricta");
-				break;
-			default:
-				puts("Error: nivelDom no reconocido");
-		}
+		userInput = realloc( userInput, i + 1 );
+		userInput[i++] = c;
 	}
-	else
-		puts("Matriz no regular");
+
+	userInput = realloc( userInput, i + 1 );
+	userInput[i] = '\0';
+
+	return userInput;
 }
 
-
 int main(int argc, char * argv[])
-{
+{	
+	printf(
+	"===== SIEL =====\n"
+	"\nINGRESE EL PATH DE SU ARCHIVO CON LA MATRIZ AB PARA INICIAR\n"
+	"\nINGRESELO AQUI --->"
+	);
+
+	char * path;
+	path = getUserInput();
+
+	Matrix * mAB;
+
+	do
+	{
+		mAB = fileToMatrix(path);
+		if(!mAB)
+		{
+			puts("No se pudo leer el archivo");
+			puts(
+			"Ingrese otro path o "
+			"presione enter para salir."
+			);
+
+			path = getUserInput();
+
+			if( !strcmp(path,"") )
+			{
+				puts("Saliendo de SIEL");
+				return -1;
+			}
+		}
+		else
+		{
+			puts("Ud. desea ingresar esta matriz:");
+			printMatrix(mAB);
+			puts("[y/n]");
+			do
+			{
+				path = getUserInput();
+				if( !strcmp(path, "n") )
+				{
+					puts(
+					"Ingrese otro path o presione "
+					"enter para salir."
+					);
+
+					path = getUserInput();
+
+					if( !strcmp(path,"") )
+					{
+						puts("Saliendo de SIEL");
+						return -1;
+					}
+				}
+			}
+			while( strcmp(path, "y") && strcmp(path, "n"));
+		}
+	}	
+	while(!mAB );
+
+	puts("Genial.");
+
+	/*
 	if( argc != 2 )
 	{
 		puts(	"Modo de uso:\n"
@@ -33,7 +92,7 @@ int main(int argc, char * argv[])
 
 		return -1;
 	}
-
+	
 	Matrix *mAB, *mA, *mB, *mT, *mC, *rtdo;
 	mAB = fileToMatrix(argv[1]);
 	getABfromMatrix(mAB, &mA, &mB);
@@ -44,23 +103,19 @@ int main(int argc, char * argv[])
 
 	puts("\nMatrix B:");
 	printMatrix(mB);
+	
+	Matrix * vIni =  matrix_new(mA->rows, 1);
+	vIni->data[0][0] = 1;
+	vIni->data[1][0] = 1;
+	vIni->data[2][0] = 1;
 
-/*	jacobi_getTCfromAB(mA,mB,&mT,&mC);
-
-	puts("\nMatrix T:");
-	printMatrix(mT);
-
-	puts("\nMatrix C:");
-	printMatrix(mC);
-*/
-
-	metodo_resolver(mA, mB, matrix_new(mA->rows, 1), GS_X);
+	metodo_resolver(mA, mB, vIni, jacobi_X);
 
 	freeMatrix(mAB);
 	freeMatrix(mA);
 	freeMatrix(mB);
 	//freeMatrix(mT);
 	//freeMatrix(mC);
-
+	*/
 	return 0;
 }

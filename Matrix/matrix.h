@@ -22,5 +22,6 @@ void printMatrix(Matrix * m);
 void freeMatrix(Matrix * m);
 int diagonalmenteDominante(Matrix * m);
 Matrix * matrix_copy(Matrix * m);
+void printDom(Matrix * m);
 
 #endif

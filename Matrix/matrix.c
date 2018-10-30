@@ -212,6 +212,9 @@ Matrix * fileToMatrix(char *path)
 	// OBTENER ARCHIVO COMPLETO COMO UN STRING
 	char * fileContents = fileToString(path);
 
+	if(!fileContents)
+		return NULL;
+
 	char * token;
 	// DIVIDIR EL CONTENIDO DEL ARCHIVO EN VARIAS CADENAS
 	// LAS CADENAS SE OBTIENEN SEPARANDO EL CONTENIDO DEL
@@ -300,4 +303,25 @@ void printMatrix(Matrix * m)
 			printf("%g\t", m->data[i][j]);
 		printf("\n");
 	}
+}
+
+void printDom(Matrix * m)
+{
+	int nivelDom;
+	if( nivelDom = diagonalmenteDominante(m) )
+	{
+		switch( nivelDom )
+		{
+			case SIMPLE:
+				puts("Matriz diagonalmente dominante");
+				break;
+			case ESTRICTA:
+				puts("Matrix diag. dom. estricta");
+				break;
+			default:
+				puts("Error: nivelDom no reconocido");
+		}
+	}
+	else
+		puts("Matriz no regular");
 }
