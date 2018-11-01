@@ -54,15 +54,18 @@ int main(int argc, char * argv[])
 			}
 		}
 		else
-		{
+		{	
+			char * rta;
 			puts("Ud. desea ingresar esta matriz:");
 			printMatrix(mAB);
 			puts("[y/n]");
 			do
 			{
-				path = getUserInput();
-				if( !strcmp(path, "n") )
+				rta = getUserInput();
+				if( !strcmp(rta, "n") )
 				{
+					freeMatrix(mAB);
+					mAB = NULL;
 					puts(
 					"Ingrese otro path o presione "
 					"enter para salir."
@@ -77,7 +80,7 @@ int main(int argc, char * argv[])
 					}
 				}
 			}
-			while( strcmp(path, "y") && strcmp(path, "n"));
+			while( strcmp(rta, "y") && strcmp(rta, "n"));
 		}
 	}	
 	while(!mAB );
