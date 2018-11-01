@@ -21,8 +21,8 @@ char * getUserInput(void)
 	return userInput;
 }
 
-int main(int argc, char * argv[])
-{	
+Matrix * obtenerMatrizDeUsuario()
+{
 	printf(
 	"===== SIEL =====\n"
 	"\nINGRESE EL PATH DE SU ARCHIVO CON LA MATRIZ AB PARA INICIAR\n"
@@ -50,7 +50,7 @@ int main(int argc, char * argv[])
 			if( !strcmp(path,"") )
 			{
 				puts("Saliendo de SIEL");
-				return -1;
+				exit(-1);
 			}
 		}
 		else
@@ -76,7 +76,7 @@ int main(int argc, char * argv[])
 					if( !strcmp(path,"") )
 					{
 						puts("Saliendo de SIEL");
-						return -1;
+						exit(-1);
 					}
 				}
 			}
@@ -86,6 +86,19 @@ int main(int argc, char * argv[])
 	while(!mAB );
 
 	puts("Genial.");
+
+	return mAB;
+}
+
+
+
+int main(int argc, char * argv[])
+{	
+	Matrix * mAB;
+	mAB = obtenerMatrizDeUsuario();
+
+	freeMatrix(mAB);
+
 
 	/*
 	if( argc != 2 )
