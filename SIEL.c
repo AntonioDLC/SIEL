@@ -97,6 +97,9 @@ int main(int argc, char * argv[])
 	Matrix * mAB;
 	mAB = obtenerMatrizDeUsuario();
 
+	calcularNorma2(mAB);
+
+
 	freeMatrix(mAB);
 
 

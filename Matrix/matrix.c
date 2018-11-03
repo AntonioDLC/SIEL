@@ -325,3 +325,52 @@ void printDom(Matrix * m)
 	else
 		puts("Matriz no regular");
 }
+//Proced: Obtener la m traspuesta mt, multiplicar m y mt, obtener el radioEsp, hacer raiz(radioEsp)
+double calcularNorma2(Matrix * m)
+{
+
+	
+
+	Matrix * nula = NULL; //Ver de eliminarla en lo posible
+
+	Matrix * c = matrix_new(m->rows,m->columns - 1);
+	getABfromMatrix(m,&c,&nula);
+
+	printMatrix(c);
+
+	Matrix * traspuesta = matrix_new(c->columns,c->rows);
+	traspuesta = getTraspuesta(c);
+	
+	printMatrix(traspuesta);
+
+	Matrix * producto = matrix_new(traspuesta->rows,c->columns);
+	producto = matrix_mult(traspuesta,c);
+
+	printMatrix(producto);
+
+	float radioEspectral = obtenerRadioEspectral(producto);
+
+	return 0; // sqrt(radioEspectral);
+}
+
+Matrix * getTraspuesta(Matrix * m)
+{
+	//Invierte la matriz
+	Matrix * traspuesta = matrix_new(m->columns,m->rows);
+
+	int i,j;
+	for( i = 0; i < m->rows; i++)
+		for( j = 0; j < m->columns; j++)
+			traspuesta->data[j][i] = m->data[i][j];
+
+	return traspuesta;
+	
+}
+
+float obtenerRadioEspectral(Matrix * m)
+{
+	//Primero Calcular los autovalores
+
+	//Luego obtener el maximo y retornarlo
+	return 0;
+}

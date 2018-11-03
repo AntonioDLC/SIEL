@@ -24,4 +24,11 @@ int diagonalmenteDominante(Matrix * m);
 Matrix * matrix_copy(Matrix * m);
 void printDom(Matrix * m);
 
+//Norma 2
+double calcularNorma2(Matrix * m);
+Matrix * getTraspuesta(Matrix * m);
+//Hacer producto con matrix_mult()
+float obtenerRadioEspectral(Matrix * m);
+
+//Habra metodos aux para obtener lo necesario para los autovalores 
 #endif
