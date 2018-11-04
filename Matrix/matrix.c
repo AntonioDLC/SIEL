@@ -336,7 +336,7 @@ double calcularNorma2(Matrix * m)
 
 	printMatrix(c);
 
-		//Se añade el caso para que solo pueda ser cuadrada la matriz
+		//Se añade el caso para que solo pueda ser cuadrada la matriz.
 	if(c->rows != c->columns)
 	{
 		printf("Error no se puede calcular la norma 2 de una matriz no cuadrada");
