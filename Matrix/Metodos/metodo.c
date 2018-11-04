@@ -1,6 +1,7 @@
 #include "../matrix.h"
 #include "metodo.h"
 #include <stdio.h>
+#include <math.h>
 
 Matrix * GS_X(Matrix * mXprev, Matrix * mT, Matrix * mC)
 {
@@ -53,9 +54,10 @@ void metodo_getTCfromAB( Matrix * mA, Matrix * mB, Matrix ** mT, Matrix ** mC)
 	}
 }
 
-void metodo_resolver(Matrix * mA, Matrix * mB, Matrix * mX0, Metodo_X metodo_X)
+void metodo_resolver(Matrix * mA, Matrix * mB, Matrix * mX0, Metodo_X metodo_X, float cota_error)
 {
 	Matrix *mT, *mC, *mX = mX0, *mXprev;
+	float ult_error, norma_anterior;
 
 	metodo_getTCfromAB(mA,mB,&mT,&mC);
 
@@ -69,10 +71,10 @@ void metodo_resolver(Matrix * mA, Matrix * mB, Matrix * mX0, Metodo_X metodo_X)
 	puts("\nVECTOR INICIAL");
 	printMatrix(mX0);
 
-	puts("\nRESOLUCION EN 10 ITERACIONES");
+	puts("\nRESOLUCION");
 
 	int i;
-	for( i = 0; i < 10; i++ )
+	for( i = 0; ult_error < cota_error; i++ )
 	{
 		puts("\n======================");
 		printf("\nVECTOR X%d:\n", i);
@@ -80,7 +82,9 @@ void metodo_resolver(Matrix * mA, Matrix * mB, Matrix * mX0, Metodo_X metodo_X)
 		puts("\n======================");
 		mXprev = mX;
 		mX = metodo_X(mXprev, mT, mC);
+		norma_anterior = calcularNormaInf(mXprev);
 		freeMatrix(mXprev);
+		ult_error = fabs(  calcularNormaInf(mX) - norma_anterior );
 	}
 	puts("\n===RESULTADO FINAL===");
 	printMatrix(mX);

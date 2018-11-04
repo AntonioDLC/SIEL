@@ -80,7 +80,7 @@ Matrix * matrix_mult( Matrix * m1, Matrix * m2 )
 
 			rtdo->data[i][j] = sum;
 		}
-/*
+/* ONLY UNCOMMENT TO DEBUG THIS FUNCION
 	puts("------------------");
 
 	printMatrix(m1);
@@ -328,29 +328,45 @@ void printDom(Matrix * m)
 //Proced: Obtener la m traspuesta mt, multiplicar m y mt, obtener el radioEsp, hacer raiz(radioEsp)
 double calcularNorma2(Matrix * m)
 {
-
-	
-
 	Matrix * nula = NULL; //Ver de eliminarla en lo posible
+	Matrix * c;// = matrix_new(m->rows,m->columns - 1);
 
-	Matrix * c = matrix_new(m->rows,m->columns - 1);
 	getABfromMatrix(m,&c,&nula);
+	freeMatrix(nula);
 
 	printMatrix(c);
 
-	Matrix * traspuesta = matrix_new(c->columns,c->rows);
+	Matrix * traspuesta;// = matrix_new(c->columns,c->rows);
 	traspuesta = getTraspuesta(c);
 	
 	printMatrix(traspuesta);
 
-	Matrix * producto = matrix_new(traspuesta->rows,c->columns);
+	Matrix * producto;// = matrix_new(traspuesta->rows,c->columns);
 	producto = matrix_mult(traspuesta,c);
+	freeMatrix(traspuesta);
+	freeMatrix(c);
 
 	printMatrix(producto);
 
 	float radioEspectral = obtenerRadioEspectral(producto);
 
 	return 0; // sqrt(radioEspectral);
+}
+
+float calcularNormaInf(Matrix * m)
+{
+	int i, j, sum, max = 0;
+
+	for( i = 0; i < m->rows; i++)
+	{
+		sum = 0;
+		for( j = 0; j < m->columns; j++)
+			sum += fabs(m->data[i][j]);
+
+		if( sum > max )	max = sum;
+	}
+
+	return max;
 }
 
 Matrix * getTraspuesta(Matrix * m)

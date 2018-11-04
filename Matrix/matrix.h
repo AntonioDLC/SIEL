@@ -23,6 +23,7 @@ void freeMatrix(Matrix * m);
 int diagonalmenteDominante(Matrix * m);
 Matrix * matrix_copy(Matrix * m);
 void printDom(Matrix * m);
+float calcularNormaInf(Matrix * m);
 
 //Norma 2
 double calcularNorma2(Matrix * m);

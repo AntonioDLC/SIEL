@@ -24,7 +24,6 @@ char * getUserInput(void)
 Matrix * obtenerMatrizDeUsuario()
 {
 	printf(
-	"===== SIEL =====\n"
 	"\nINGRESE EL PATH DE SU ARCHIVO CON LA MATRIZ AB PARA INICIAR\n"
 	"\nINGRESELO AQUI --->"
 	);
@@ -94,10 +93,33 @@ Matrix * obtenerMatrizDeUsuario()
 
 int main(int argc, char * argv[])
 {	
-	Matrix * mAB;
-	mAB = obtenerMatrizDeUsuario();
+	Matrix * mAB, * mA, * mB, * X0;
+	Metodo_X metodo_X;
+	float cota_error;
+	int una_mas = 0;
 
-	calcularNorma2(mAB);
+	puts("===== SIEL =====");
+
+	do
+	{
+		mAB = obtenerMatrizDeUsuario();
+		metodo_X = obtenerMetodoDeUsuario();
+		X0 = obtenerVectorInicialDeUsuario();
+		cota_error = obtenerCotaDeErrorDeUsuario();
+
+		getABfromMatrix(mAB, &mA, &mB);
+		do
+		{
+			metodo_resolver(mA, mB, X0, metodo_X, cota_error);
+			metodo_X = preguntarSiDeseaUsarOtroMetodo();
+		}
+		while( metodo_X != NULL );
+
+		una_mas = preguntarSiDeseaResolverOtraMatriz();
+	}
+	while( una_mas );
+
+	//calcularNorma2(mAB);
 
 
 	freeMatrix(mAB);
