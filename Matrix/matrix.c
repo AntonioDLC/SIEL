@@ -329,14 +329,19 @@ void printDom(Matrix * m)
 double calcularNorma2(Matrix * m)
 {
 
-	
-
 	Matrix * nula = NULL; //Ver de eliminarla en lo posible
 
 	Matrix * c = matrix_new(m->rows,m->columns - 1);
 	getABfromMatrix(m,&c,&nula);
 
 	printMatrix(c);
+	
+		//Se añade el caso para que solo pueda ser cuadrada la matriz
+	if(c->rows != c->columns)
+	{
+		printf("Error no se puede calcular la norma 2 de una matriz no cuadrada");
+		return -1;
+	}
 
 	Matrix * traspuesta = matrix_new(c->columns,c->rows);
 	traspuesta = getTraspuesta(c);
