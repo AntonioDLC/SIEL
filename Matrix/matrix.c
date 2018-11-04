@@ -335,7 +335,7 @@ double calcularNorma2(Matrix * m)
 	getABfromMatrix(m,&c,&nula);
 
 	printMatrix(c);
-	
+
 		//Se añade el caso para que solo pueda ser cuadrada la matriz
 	if(c->rows != c->columns)
 	{

@@ -31,4 +31,5 @@ Matrix * getTraspuesta(Matrix * m);
 float obtenerRadioEspectral(Matrix * m);
 
 //Habra metodos aux para obtener lo necesario para los autovalores 
+
 #endif
