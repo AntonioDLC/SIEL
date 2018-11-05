@@ -24,8 +24,7 @@ char * getUserInput(void)
 Matrix * obtenerMatrizDeUsuario()
 {
 	printf(
-	"\nINGRESE EL PATH DE SU ARCHIVO CON LA MATRIZ AB PARA INICIAR\n"
-	"\nINGRESELO AQUI --->"
+	"\nINGRESE EL PATH A SU MATRIZ AQUI --->"
 	);
 
 	char * path;
@@ -89,18 +88,123 @@ Matrix * obtenerMatrizDeUsuario()
 	return mAB;
 }
 
+Metodo_X * obtenerMetodoDeUsuario(void)
+{
+	puts("INGRESE EL NRO DEL METODO A UTILIZAR");
+	puts("1. Jacobi");
+	puts("2. Gauss-Seidel");
 
+	char * rta;
+	Metodo_X * met;
+
+	do
+	{
+		rta = getUserInput();
+	
+		if( !strcmp("1", rta) )
+		{
+			puts("Ud. selecciono Jacobi");
+			met = jacobi_X;
+		}
+		else
+		if( !strcmp("2", rta) )
+		{
+			puts("Ud. selecciono Gauss-Seidel");
+			met = GS_X;
+		}
+		else
+		{
+			puts("Opcion incorrecta");
+			met = NULL;
+		}
+	}
+	while(!met);
+
+	return met;
+}
+
+Matrix * obtenerVectorInicialDeUsuario(void)
+{
+	puts("INGRESE EL PATH A SU VECTOR INICIAL");
+	puts("SU VECTOR INICIAL DEBE SER UNA MATRIZ DE UNA SOLA COLUMNA");
+
+	return obtenerMatrizDeUsuario();
+}
+
+float obtenerCotaDeErrorDeUsuario(void)
+{
+	puts("INGRESE LA COTA DE ERROR");
+	puts("--->");
+	char * error;
+	float rtdo;
+
+	error = getUserInput();
+	rtdo = atof(error);
+	
+	free(error);
+
+	return rtdo;
+}
+
+Metodo_X * preguntarSiDeseaUsarOtroMetodo(void)
+{
+	puts("Ud. desea resolver el mismo sistema por otro metodo");
+	puts("[y/n]");
+	char *  rta;
+	Metodo_X * rtdo;
+	rta = getUserInput();
+
+	if( !strcmp("y", rta) )
+		rtdo = obtenerMetodoDeUsuario();
+	else
+	if( !strcmp("n", rta) )
+		rtdo = NULL;
+	else
+	{
+		puts("Ingrese una opcion correcta");
+		rtdo = preguntarSiDeseaUsarOtroMetodo();
+	}
+
+	free(rta);
+	return rtdo;
+}
+
+int preguntarSiDeseaResolverOtraMatriz(void)
+{
+	puts("Ud. desea resolver otra matriz");
+	puts("[y/n]");
+
+	char * rta, rtdo;
+	rta = getUserInput();
+
+	if( !strcmp("y", rta) )
+		rtdo = 1;
+	else
+	if( !strcmp("n", rta) )
+		rtdo = 0;
+	else
+	{
+		puts("Ingrese una opcion correcta");
+		rtdo = preguntarSiDeseaResolverOtraMatriz();
+	}
+
+	free(rta);
+
+	return rtdo;
+}
 
 int main(int argc, char * argv[])
 {	
 	Matrix * mAB, * mA, * mB, * X0;
-	Metodo_X metodo_X;
+	Metodo_X * metodo_X;
 	float cota_error;
 	int una_mas = 0;
 
 	puts("===== SIEL =====");
-
-	do
+/*
+		mAB = obtenerMatrizDeUsuario();
+		printMatrix(mAB);
+*/	do
 	{
 		mAB = obtenerMatrizDeUsuario();
 		metodo_X = obtenerMetodoDeUsuario();

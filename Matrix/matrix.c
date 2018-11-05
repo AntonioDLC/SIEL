@@ -232,28 +232,33 @@ Matrix * fileToMatrix(char *path)
 		// SI LLEGUE AL FINAL DE LA FILA
 		if(pos = strchr(token, '\n') )
 		{
-			// TOMO LA PRIMERA PARTE DEL TOKEN
-			// COMO VALOR ULTIMO DE LA FILA
-			*pos = '\0';
-			fila[j] = atof(token);
+			do
+			{
+				// TOMO LA PRIMERA PARTE DEL TOKEN
+				// COMO VALOR ULTIMO DE LA FILA
+				*pos = '\0';
+				fila[j] = atof(token);
+	
+				// GUARDO LA FILA EN EL ESPACIO JUSTO
+				mAB[i] = 
+				(float*)realloc(fila, sizeof(float)*(j+1));
+	
+				// INICIALIZO LAS VARIABLES NECESARIAS
+				// PARA UNA NUEVA ITERACION DE FILA
+				fila = (float*)malloc(128);
+				j = 0;
+	
+				// INCREMENTO EL NRO DE FILAS EN UNO
+				i++;
+				token = pos + 1;
+			}
+			while(pos = strchr(token, '\n') );
 
-			// GUARDO LA FILA EN EL ESPACIO JUSTO
-			mAB[i] = (float*)realloc(fila, sizeof(float)*(j+1));
-
-			// INICIALIZO LAS VARIABLES NECESARIAS
-			// PARA UNA NUEVA ITERACION DE FILA
-			fila = (float*)malloc(128);
-			j = 0;
-
-			// INCREMENTO EL NRO DE FILAS EN UNO
-			i++;
-
-			// TOMO LA SEGUNDA PARTE DEL TOKEN
-			// COMO VALOR PRIMERO DE LA NUEVA FILA
-			fila[j++] = atof(pos + 1);
+			fila[j++] = atof(token);
 		}
+
 		// SI EL TOKEN NO ES UN CARACTER PIPE
-		else if( strcmp(token, "|") )
+		else if( !pos && strcmp(token, "|") )
 			// TOMO EL VALOR DEL TOKEN
 			// COMO VALOR DE POSICION J DE LA FILA ACTUAL
 			fila[j++] = atof(token);
@@ -336,6 +341,13 @@ double calcularNorma2(Matrix * m)
 
 	printMatrix(c);
 
+	//Se añade el caso para que solo pueda ser cuadrada la matriz.
+	if(c->rows != c->columns)
+	{
+		printf("Error no se puede calcular la norma 2 de una matriz no cuadrada");
+		return -1;
+	}
+
 	Matrix * traspuesta;// = matrix_new(c->columns,c->rows);
 	traspuesta = getTraspuesta(c);
 	
@@ -355,7 +367,8 @@ double calcularNorma2(Matrix * m)
 
 float calcularNormaInf(Matrix * m)
 {
-	int i, j, sum, max = 0;
+	int i, j;
+	float sum, max = 0;
 
 	for( i = 0; i < m->rows; i++)
 	{

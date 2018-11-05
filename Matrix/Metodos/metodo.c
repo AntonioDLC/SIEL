@@ -56,8 +56,8 @@ void metodo_getTCfromAB( Matrix * mA, Matrix * mB, Matrix ** mT, Matrix ** mC)
 
 void metodo_resolver(Matrix * mA, Matrix * mB, Matrix * mX0, Metodo_X metodo_X, float cota_error)
 {
-	Matrix *mT, *mC, *mX = mX0, *mXprev;
-	float ult_error, norma_anterior;
+	Matrix *mT, *mC, *mX = matrix_copy(mX0), *mXprev;
+	float ult_error = 100, norma_anterior;
 
 	metodo_getTCfromAB(mA,mB,&mT,&mC);
 
@@ -74,7 +74,7 @@ void metodo_resolver(Matrix * mA, Matrix * mB, Matrix * mX0, Metodo_X metodo_X, 
 	puts("\nRESOLUCION");
 
 	int i;
-	for( i = 0; ult_error < cota_error; i++ )
+	for( i = 0; ult_error > cota_error; i++ )
 	{
 		puts("\n======================");
 		printf("\nVECTOR X%d:\n", i);
@@ -85,6 +85,7 @@ void metodo_resolver(Matrix * mA, Matrix * mB, Matrix * mX0, Metodo_X metodo_X, 
 		norma_anterior = calcularNormaInf(mXprev);
 		freeMatrix(mXprev);
 		ult_error = fabs(  calcularNormaInf(mX) - norma_anterior );
+		getchar();
 	}
 	puts("\n===RESULTADO FINAL===");
 	printMatrix(mX);
