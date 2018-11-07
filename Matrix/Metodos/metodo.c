@@ -76,10 +76,9 @@ void metodo_resolver(Matrix * mA, Matrix * mB, Matrix * mX0, Metodo_X metodo_X, 
 	int i;
 	for( i = 0; ult_error > cota_error; i++ )
 	{
-		puts("\n======================");
+		printf("\n======================");
 		printf("\nVECTOR X%d:\n", i);
-		printMatrix(mX);
-		puts("\n======================");
+		printVector(mX);
 		mXprev = mX;
 		mX = metodo_X(mXprev, mT, mC);
 		norma_anterior = calcularNormaInf(mXprev);

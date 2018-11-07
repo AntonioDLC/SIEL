@@ -306,8 +306,22 @@ void printMatrix(Matrix * m)
 	{
 		for( j = 0; j < m->columns; j++)
 			printf("%g\t", m->data[i][j]);
-		printf("\n");
+		putchar('\n');
 	}
+	putchar('\b');
+}
+
+void printVector(Matrix * m)
+{
+	int i;
+
+	printf("Vector de dimension %d:\n", m->rows);
+
+	printf("(");
+	for( i = 0; i < m->rows; i++)
+		printf( " %g,", m->data[i][0]);
+
+	printf("\b )");
 }
 
 void printDom(Matrix * m)

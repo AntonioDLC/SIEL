@@ -134,7 +134,7 @@ Matrix * obtenerVectorInicialDeUsuario(void)
 float obtenerCotaDeErrorDeUsuario(void)
 {
 	puts("INGRESE LA COTA DE ERROR");
-	puts("--->");
+	printf("--->");
 	char * error;
 	float rtdo;
 
@@ -201,10 +201,8 @@ int main(int argc, char * argv[])
 	int una_mas = 0;
 
 	puts("===== SIEL =====");
-/*
-		mAB = obtenerMatrizDeUsuario();
-		printMatrix(mAB);
-*/	do
+	
+	do
 	{
 		mAB = obtenerMatrizDeUsuario();
 		metodo_X = obtenerMetodoDeUsuario();
@@ -225,42 +223,7 @@ int main(int argc, char * argv[])
 
 	//calcularNorma2(mAB);
 
-
 	freeMatrix(mAB);
 
-
-	/*
-	if( argc != 2 )
-	{
-		puts(	"Modo de uso:\n"
-			"\t./SIEL <matrizAB.txt>\n");
-
-		return -1;
-	}
-	
-	Matrix *mAB, *mA, *mB, *mT, *mC, *rtdo;
-	mAB = fileToMatrix(argv[1]);
-	getABfromMatrix(mAB, &mA, &mB);
-
-	puts("\nMatrix A:");
-	printMatrix(mA);
-	printDom(mA);
-
-	puts("\nMatrix B:");
-	printMatrix(mB);
-	
-	Matrix * vIni =  matrix_new(mA->rows, 1);
-	vIni->data[0][0] = 1;
-	vIni->data[1][0] = 1;
-	vIni->data[2][0] = 1;
-
-	metodo_resolver(mA, mB, vIni, jacobi_X);
-
-	freeMatrix(mAB);
-	freeMatrix(mA);
-	freeMatrix(mB);
-	//freeMatrix(mT);
-	//freeMatrix(mC);
-	*/
 	return 0;
 }
