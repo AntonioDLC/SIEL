@@ -300,7 +300,7 @@ void printMatrix(Matrix * m)
 {
 	int i, j;
 
-	printf("Una matriz de %d x %d\n", m->rows, m->columns);
+//	printf("Una matriz de %d x %d\n", m->rows, m->columns);
 
 	for(i = 0; i < m->rows; i++ )
 	{
@@ -311,15 +311,16 @@ void printMatrix(Matrix * m)
 	putchar('\b');
 }
 
-void printVector(Matrix * m)
+void printVector(Matrix * m, int cant_decimales)
 {
 	int i;
 
-	printf("Vector de dimension %d:\n", m->rows);
-
+//	printf("Vector de dimension %d:\n", m->rows);
+	char * formato = malloc(strlen(" %.3f,")+1);
+	sprintf( formato, " %%.%df,", cant_decimales);
 	printf("(");
 	for( i = 0; i < m->rows; i++)
-		printf( " %g,", m->data[i][0]);
+		printf(formato, m->data[i][0]);
 
 	printf("\b )");
 }

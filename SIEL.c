@@ -131,6 +131,21 @@ Matrix * obtenerVectorInicialDeUsuario(void)
 	return obtenerMatrizDeUsuario();
 }
 
+int obtenerCantidadDeDecimales(void)
+{
+	puts("INGRESE LA CANTIDAD DE DECIMALES");
+	printf("--->");
+	char * decs;
+	int rtdo;
+
+	decs = getUserInput();
+	rtdo = atoi(decs);
+	
+	free(decs);
+
+	return rtdo;
+}
+
 float obtenerCotaDeErrorDeUsuario(void)
 {
 	puts("INGRESE LA COTA DE ERROR");
@@ -198,7 +213,7 @@ int main(int argc, char * argv[])
 	Matrix * mAB, * mA, * mB, * X0;
 	Metodo_X * metodo_X;
 	float cota_error;
-	int una_mas = 0;
+	int una_mas = 0, decimales;
 
 	puts("===== SIEL =====");
 	
@@ -207,12 +222,13 @@ int main(int argc, char * argv[])
 		mAB = obtenerMatrizDeUsuario();
 		metodo_X = obtenerMetodoDeUsuario();
 		X0 = obtenerVectorInicialDeUsuario();
+		decimales = obtenerCantidadDeDecimales();
 		cota_error = obtenerCotaDeErrorDeUsuario();
 
 		getABfromMatrix(mAB, &mA, &mB);
 		do
 		{
-			metodo_resolver(mA, mB, X0, metodo_X, cota_error);
+			metodo_resolver(mA, mB, X0, metodo_X, cota_error, decimales);
 			metodo_X = preguntarSiDeseaUsarOtroMetodo();
 		}
 		while( metodo_X != NULL );
