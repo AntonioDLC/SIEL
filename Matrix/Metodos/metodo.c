@@ -57,7 +57,7 @@ void metodo_getTCfromAB( Matrix * mA, Matrix * mB, Matrix ** mT, Matrix ** mC)
 void metodo_resolver(Matrix * mA, Matrix * mB, Matrix * mX0, Metodo_X metodo_X, float cota_error, int cant_decs)
 {
 	Matrix *mT, *mC, *mX = matrix_copy(mX0), *mXprev;
-	float ult_error = 100, norma_anterior;
+	float ult_error = 100, norma, norma_anterior;
 
 	metodo_getTCfromAB(mA,mB,&mT,&mC);
 
@@ -74,6 +74,7 @@ void metodo_resolver(Matrix * mA, Matrix * mB, Matrix * mX0, Metodo_X metodo_X, 
 	puts("\nRESOLUCION");
 
 	int i;
+	norma_anterior = calcularNormaInf(mX);
 	for( i = 0; ult_error > cota_error; i++ )
 	{
 		puts("======================");
@@ -81,9 +82,16 @@ void metodo_resolver(Matrix * mA, Matrix * mB, Matrix * mX0, Metodo_X metodo_X, 
 		printVector(mX, cant_decs);
 		mXprev = mX;
 		mX = metodo_X(mXprev, mT, mC);
-		norma_anterior = calcularNormaInf(mXprev);
+		norma = calcularNormaInf(mX);
 		freeMatrix(mXprev);
-		ult_error = fabs(  calcularNormaInf(mX) - norma_anterior );
+		ult_error = fabs(  norma - norma_anterior );
+		printf(	"\nCRITERIO DE PARO: "
+			"Diferencia entre norma infinita actual: %f\n"
+			"...y la anterior: %f\n"
+			"Da: %f, y la cota de error es %f",
+			norma, norma_anterior, ult_error, cota_error);
+
+		norma_anterior = norma;
 		getchar();
 	}
 	puts("\n===RESULTADO FINAL===");
