@@ -139,6 +139,29 @@ int fila_getDominante( Matrix * m, int fila, float * dom, float * col)
 
 int diagonalmenteDominante(Matrix * m)
 {
+	Dominancia tipoDomFila;
+
+	int i;
+	for( i = 0; i < m->rows; i++ )
+	{
+		tipoDomFila = elem_esDominante(m, i, i);
+		if( tipoDomFila < ESTRICTA)
+			break;
+	}
+
+	for( ; i < m->rows; i++ )
+	{
+		tipoDomFila = elem_esDominante(m, i, i);
+		if( tipoDomFila < SIMPLE)
+			break;
+	}
+
+	return tipoDomFila;
+}
+
+
+int puedeSerDiagonalmenteDominante(Matrix * m)
+{
 	float escalarDom, nroColumna;
 	Dominancia tipoDomFila, tipoDomMatriz = ESTRICTA;
 	Array * columnasDominantes = array_new(sizeof(int));

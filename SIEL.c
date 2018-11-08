@@ -211,6 +211,7 @@ int preguntarSiDeseaResolverOtraMatriz(void)
 int main(int argc, char * argv[])
 {	
 	Matrix * mAB, * mA, * mB, * X0;
+	Dominancia dom;
 	Metodo_X * metodo_X;
 	float cota_error;
 	int una_mas = 0, decimales;
@@ -219,13 +220,28 @@ int main(int argc, char * argv[])
 	
 	do
 	{
-		mAB = obtenerMatrizDeUsuario();
+		do
+		{
+			mAB = obtenerMatrizDeUsuario();
+			getABfromMatrix(mAB, &mA, &mB);
+			dom = diagonalmenteDominante(mA);
+			if(!dom)
+			{
+				puts("Su matrix no es diagonalmente dominante");
+				puts("Modifiquela hasta que lo sea");
+				freeMatrix(mA);
+				freeMatrix(mB);
+				freeMatrix(mAB);
+			}
+		}		
+		while(!dom);
+
+
 		metodo_X = obtenerMetodoDeUsuario();
 		X0 = obtenerVectorInicialDeUsuario();
 		decimales = obtenerCantidadDeDecimales();
 		cota_error = obtenerCotaDeErrorDeUsuario();
 
-		getABfromMatrix(mAB, &mA, &mB);
 		do
 		{
 			metodo_resolver(mA, mB, X0, metodo_X, cota_error, decimales);

@@ -21,6 +21,7 @@ void getABfromMatrix(Matrix * m, Matrix ** a, Matrix ** b);
 void printMatrix(Matrix * m);
 void printVector(Matrix * m, int cant_dec);
 void freeMatrix(Matrix * m);
+int podriaSerDiagonalmenteDominante(Matrix * m);
 int diagonalmenteDominante(Matrix * m);
 Matrix * matrix_copy(Matrix * m);
 void printDom(Matrix * m);
