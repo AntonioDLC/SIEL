@@ -4,7 +4,7 @@ VPATH = FileToString Matrix Array Matrix/Metodos
 OBJS = SIEL.o fileToString.o matrix.o array.o metodo.o
 
 SIEL : $(OBJS)
-	gcc -g -o SIEL $(OBJS)
+	gcc -g -o SIEL $(OBJS) -lm
 
 SIEL.o : matrix.h
 jacobi.o : matrix.h metodo.h

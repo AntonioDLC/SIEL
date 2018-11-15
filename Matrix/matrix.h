@@ -29,10 +29,12 @@ float calcularNormaInf(Matrix * m);
 
 //Norma 2
 double calcularNorma2(Matrix * m);
+double calcularNorma1(Matrix * m);
 Matrix * getTraspuesta(Matrix * m);
 //Hacer producto con matrix_mult()
 float obtenerRadioEspectral(Matrix * m);
-
+float determinanteCuadradas(Matrix * mat);
+//float determinanteCuadradas(Matrix *mat, int orden);
 //Habra metodos aux para obtener lo necesario para los autovalores 
 
 #endif

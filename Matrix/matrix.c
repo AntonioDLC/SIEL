@@ -400,7 +400,7 @@ double calcularNorma2(Matrix * m)
 
 	float radioEspectral = obtenerRadioEspectral(producto);
 
-	return 0; // sqrt(radioEspectral);
+	return sqrt(radioEspectral);
 }
 
 float calcularNormaInf(Matrix * m)
@@ -436,8 +436,326 @@ Matrix * getTraspuesta(Matrix * m)
 
 float obtenerRadioEspectral(Matrix * m)
 {
-	//Primero Calcular los autovalores
+	/*Primero Calcular los autovalores: Pasos
+1)Restarle a A X veces una matriz identidad con la misma dimension
+2)Calcular el determinante de la matriz resultante
+3)Calcular los raices de la ecuacion resultante
+*/
 
 	//Luego obtener el maximo y retornarlo
 	return 0;
 }
+
+double calcularNorma1(Matrix * m){
+	double maximo = 0,sum;
+		int i, j;
+
+	for( i = 0; i < m->columns; i++)
+	{
+		sum = 0;
+		for( j = 0; j < m->rows; j++)
+			sum += fabs(m->data[i][j]);
+
+		if( sum > maximo )	maximo = sum;
+	}
+	return maximo;
+}
+
+float determinanteCuadradas(Matrix * mat)
+{
+	//n: orden de la matrix
+int i,j,k,l = 0,n,m;
+float det;
+n = mat->rows;
+m = n -1;
+det=mat->data[1][1]; 
+for(k=1;k<=m;k++) 
+{ l=k+1; 
+for(i=l;i<=n;i++) 
+{ for(j=l;j<=n;j++) 
+mat->data[i][j] = ( mat->data[k][k]*mat->data[i][j]-mat->data[k][j]*mat->data[i][k] )/mat->data[k][k]; } 
+det=det*mat->data[k+1][k+1]; 
+}
+return det;
+}
+
+
+/*
+float determinanteCuadradas(Matrix *mat, int orden){
+
+        float determinante = 0, aux = 0;
+
+        int c;
+		Matrix menor[mat->rows-1];
+
+        if(mat->rows == 2)
+                return mat->data[0][0]*mat->data[1][1] - mat->data[1][0]*mat->data[0][1];
+
+        else{
+
+                for(int j=0; j< mat->rows; j++){
+
+						//Matrix **menor = matrix_new(orden-1,orden-1);
+                        //float **menor = (float **)malloc(sizeof(float)*(orden -1));
+
+                        for(int h=0; h<(orden-1); h++) menor[h] = matrix_new(orden-1,orden-1);;
+
+                        for(int k=1; k<orden; k++){
+
+                                c = 0;
+
+                                for(int l=0; l<orden; l++){
+
+                                        if(l!=j){
+
+                                                menor->data[k-1][c] = mat->data[k][l];
+
+                                                c++;
+
+                                        }
+
+                                }
+
+                        }
+
+                        aux = pow(-1, 2+j)*mat->data[0][j]*determinanteCuadradas(menor, orden-1);
+
+                        determinante += aux;					
+
+                }
+
+                return determinante;
+
+		}
+
+    }
+*/
+/*
+	double * autovalores(Matrix * m) {
+int i, j, ip, iq, nrot, n;
+ 
+   n = m->rows;
+ 
+   double **v, **f;
+ 
+   //v = new double *[n];
+   v = malloc(sizeof(double)*n);
+   //f = new double *[n];
+   f  = malloc(sizeof(double)*n);
+ 
+   for(i = 0; i< m->rows; i++){
+ 
+                v[i] = malloc(sizeof(double)*n);
+                f[i] = malloc(sizeof(double)*n);
+ 
+        }
+ 
+        for(i=0; i < n; i++){
+ 
+                for(j=0; j < n; j++){
+ 
+                        f[i][j] = m->data[i][j];
+               
+                }
+       
+        }
+ 
+// Define las variables de tipo doble
+ 
+   double *b, *z, *d;
+ 
+   b = malloc(sizeof(double)*n);
+   z = malloc(sizeof(double)*n);
+   d = malloc(sizeof(double)*n);
+ 
+   double c, g, h, s, sm, t, tau, theta, tresh;
+ 
+// Inicializa a la matriz identidad
+ 
+   for (ip = 0; ip < n; ip++) {
+ 
+      for (iq = 0; iq < n; iq++) {
+ 
+         v[ip][iq] = 0;
+ 
+      }
+ 
+      v[ip][ip] = 1;
+ 
+   }
+ 
+// Inicializa b y d a la diagonal de a
+ 
+   for (ip = 0; ip < n; ip++) {  
+ 
+      b[ip] = f[ip][ip];
+ 
+      d[ip] = b[ip];
+ 
+      z[ip] = 0;
+ 
+   }
+ 
+   nrot = 0;
+ 
+   for (i = 0; i < 50; i++) {
+ 
+      sm = 0;
+ 
+      for (ip = 0; ip < n - 1; ip++) {
+ 
+         for (iq = ip + 1; iq < n; iq++) {
+ 
+            sm +=fabs(f[ip][iq]);
+ 
+         }
+ 
+      }
+ 
+      if (sm == 0) break;
+ 
+      if (i < 4)
+ 
+         tresh = 0.2*sm/(n*n);
+ 
+      else
+ 
+         tresh = 0.0;
+ 
+      for (ip =0; ip < n -1; ip++) {
+ 
+         for (iq = ip + 1; iq < n; iq++) {
+ 
+            g = 100.0*fabs(f[ip][iq]);
+ 
+            if(i>4 && (double)(fabs(d[ip])+g) == (double)fabs(d[ip])
+ 
+               && (double)(fabs(d[iq])+g) == (double)fabs(d[iq]))
+ 
+               f[ip][iq] = 0.0;
+ 
+            else if (fabs(f[ip][iq]) > tresh) {
+ 
+               h = d[iq] - d[ip];
+ 
+               if ((double)(fabs(h)+g) == (double)fabs(h))
+ 
+                  t = (f[ip][iq])/h;   // t = 1/(2theta)
+ 
+               else {
+ 
+                  theta = 0.5*h/(f[ip][iq]);
+ 
+                  t = 1.0/(fabs(theta)+sqrt(1.0+theta*theta));
+ 
+                  if(theta < 0.0) t = -t;
+ 
+               }
+ 
+                  c = 1.0/sqrt(1+t*t);
+ 
+                  s = t*c;
+ 
+                  tau = s/(1.0+c);
+ 
+                  h = t*f[ip][iq];
+ 
+                  z[ip] -=h;
+ 
+                  z[iq] +=h;
+ 
+                  d[ip] -=h;
+ 
+                  d[iq] +=h;
+ 
+                  f[ip][iq] = 0.0;
+ 
+// Varía desde 0 hasta  ip - 1
+ 
+               for (j =0; j < ip; j++) {
+ 
+                  g = f[j][ip];
+ 
+                  h = f[j][iq];
+ 
+                  f[j][ip] = g - s*(h+g*tau);
+ 
+                  f[j][iq] = h + s*(g-h*tau);
+ 
+               }
+ 
+// Varía desde ip+1 hasta  iq - 1
+ 
+               for (j =ip+1; j < iq; j++) {
+ 
+                  g = f[ip][j];
+ 
+                  h = f[j][iq];
+ 
+                  f[ip][j] = g - s*(h+g*tau);
+ 
+                  f[j][iq] = h + s*(g-h*tau);
+ 
+               }
+ 
+               for (j =iq+1; j < n; j++) {
+ 
+                  g = f[ip][j];
+ 
+                  h = f[iq][j];
+ 
+                  f[ip][j] = g - s*(h+g*tau);
+ 
+                  f[iq][j] = h + s*(g-h*tau);
+ 
+               }
+ 
+               for (j =0; j < n; j++) {
+ 
+                  g = v[j][ip];
+ 
+                  h = v[j][iq];
+ 
+                  v[j][ip] = g - s*(h+g*tau);
+ 
+                  v[j][iq] = h + s*(g-h*tau);
+ 
+                  }
+ 
+               ++(nrot);
+ 
+            }
+ 
+         }
+ 
+      }
+ 
+         for (ip = 0; ip < n; ip++) {
+ 
+            b[ip] = b[ip]+z[ip];
+ 
+            d[ip] = b[ip];
+ 
+            z[ip] = 0.0;
+ 
+         }
+ 
+        for(i=0; i < n; i++){
+ 
+                for(j=0; j < n; j++){
+               
+                        if(i != j) m->data[i][j] = 0;
+ 
+                                else m->data[i][i] = d[i];
+               
+                }
+       
+        }
+ 
+		return NULL;
+   }  
+ 
+
+}
+*/
+
