@@ -368,46 +368,11 @@ void printDom(Matrix * m)
 	else
 		puts("Matriz no regular");
 }
-//Proced: Obtener la m traspuesta mt, multiplicar m y mt, obtener el radioEsp, hacer raiz(radioEsp)
-double calcularNorma2(Matrix * m)
-{
-	Matrix * nula = NULL; //Ver de eliminarla en lo posible
-	Matrix * c;// = matrix_new(m->rows,m->columns - 1);
-
-	getABfromMatrix(m,&c,&nula);
-	freeMatrix(nula);
-
-	printMatrix(c);
-
-	//Se añade el caso para que solo pueda ser cuadrada la matriz.
-	if(c->rows != c->columns)
-	{
-		printf("Error no se puede calcular la norma 2 de una matriz no cuadrada");
-		return -1;
-	}
-
-	Matrix * traspuesta;// = matrix_new(c->columns,c->rows);
-	traspuesta = getTraspuesta(c);
-	
-	printMatrix(traspuesta);
-
-	Matrix * producto;// = matrix_new(traspuesta->rows,c->columns);
-	producto = matrix_mult(traspuesta,c);
-	freeMatrix(traspuesta);
-	freeMatrix(c);
-
-	printMatrix(producto);
-
-	float radioEspectral = obtenerRadioEspectral(producto);
-
-	return sqrt(radioEspectral);
-}
-
 float calcularNormaInf(Matrix * m)
 {
 	int i, j;
 	float sum, max = 0;
-
+	
 	for( i = 0; i < m->rows; i++)
 	{
 		sum = 0;
@@ -434,16 +399,58 @@ Matrix * getTraspuesta(Matrix * m)
 	
 }
 
+//Proced: Obtener la m traspuesta mt, multiplicar m y mt, obtener el radioEsp, hacer raiz(radioEsp)
+double calcularNorma2(Matrix * m)
+{
+	Matrix * nula = NULL; //Ver de eliminarla en lo posible
+	Matrix * c;// = matrix_new(m->rows,m->columns - 1);
+
+	getABfromMatrix(m,&c,&nula);
+	freeMatrix(nula);
+
+	//printMatrix(c);
+
+	//Se añade el caso para que solo pueda ser cuadrada la matriz.
+	if(c->rows != c->columns)
+	{
+		printf("Error no se puede calcular la norma 2 de una matriz no cuadrada");
+		return -1;
+	}
+
+	Matrix * traspuesta;// = matrix_new(c->columns,c->rows);
+	traspuesta = getTraspuesta(c);
+	
+	//printMatrix(traspuesta);
+
+	Matrix * producto;// = matrix_new(traspuesta->rows,c->columns);
+	producto = matrix_mult(traspuesta,c);
+	freeMatrix(traspuesta);
+	freeMatrix(c);
+
+	//printMatrix(producto);
+
+	float radioEspectral = obtenerRadioEspectral(producto);
+	
+	return sqrt(radioEspectral);
+}
+
+
 float obtenerRadioEspectral(Matrix * m)
 {
-	/*Primero Calcular los autovalores: Pasos
-1)Restarle a A X veces una matriz identidad con la misma dimension
-2)Calcular el determinante de la matriz resultante
-3)Calcular los raices de la ecuacion resultante
-*/
-
+	int i,j;
+	float sum=0,max=0;
+	Matrix * autov = matrix_new(m->columns,m->rows);
+	autov = autovalores(m);
+	for( i = 0; i < autov->columns; i++)
+	{
+		for( j = 0; j < autov->rows; j++)
+		{
+			sum = fabs(autov->data[i][j]);
+			if(sum > max) {max = sum;}
+		}
+	}
 	//Luego obtener el maximo y retornarlo
-	return 0;
+	return max;
 }
 
 double calcularNorma1(Matrix * m){
@@ -461,77 +468,8 @@ double calcularNorma1(Matrix * m){
 	return maximo;
 }
 
-float determinanteCuadradas(Matrix * mat)
-{
-	//n: orden de la matrix
-int i,j,k,l = 0,n,m;
-float det;
-n = mat->rows;
-m = n -1;
-det=mat->data[1][1]; 
-for(k=1;k<=m;k++) 
-{ l=k+1; 
-for(i=l;i<=n;i++) 
-{ for(j=l;j<=n;j++) 
-mat->data[i][j] = ( mat->data[k][k]*mat->data[i][j]-mat->data[k][j]*mat->data[i][k] )/mat->data[k][k]; } 
-det=det*mat->data[k+1][k+1]; 
-}
-return det;
-}
 
-
-/*
-float determinanteCuadradas(Matrix *mat, int orden){
-
-        float determinante = 0, aux = 0;
-
-        int c;
-		Matrix menor[mat->rows-1];
-
-        if(mat->rows == 2)
-                return mat->data[0][0]*mat->data[1][1] - mat->data[1][0]*mat->data[0][1];
-
-        else{
-
-                for(int j=0; j< mat->rows; j++){
-
-						//Matrix **menor = matrix_new(orden-1,orden-1);
-                        //float **menor = (float **)malloc(sizeof(float)*(orden -1));
-
-                        for(int h=0; h<(orden-1); h++) menor[h] = matrix_new(orden-1,orden-1);;
-
-                        for(int k=1; k<orden; k++){
-
-                                c = 0;
-
-                                for(int l=0; l<orden; l++){
-
-                                        if(l!=j){
-
-                                                menor->data[k-1][c] = mat->data[k][l];
-
-                                                c++;
-
-                                        }
-
-                                }
-
-                        }
-
-                        aux = pow(-1, 2+j)*mat->data[0][j]*determinanteCuadradas(menor, orden-1);
-
-                        determinante += aux;					
-
-                }
-
-                return determinante;
-
-		}
-
-    }
-*/
-/*
-	double * autovalores(Matrix * m) {
+Matrix * autovalores(Matrix * m) {
 int i, j, ip, iq, nrot, n;
  
    n = m->rows;
@@ -543,13 +481,14 @@ int i, j, ip, iq, nrot, n;
    //f = new double *[n];
    f  = malloc(sizeof(double)*n);
  
+ //Genera una copia de la matriz original
    for(i = 0; i< m->rows; i++){
  
                 v[i] = malloc(sizeof(double)*n);
                 f[i] = malloc(sizeof(double)*n);
  
         }
- 
+ //Un casteo/pasaje de Matrix -> double**
         for(i=0; i < n; i++){
  
                 for(j=0; j < n; j++){
@@ -560,7 +499,7 @@ int i, j, ip, iq, nrot, n;
        
         }
  
-// Define las variables de tipo doble
+// Define las variables de tipo double
  
    double *b, *z, *d;
  
@@ -584,7 +523,7 @@ int i, j, ip, iq, nrot, n;
  
    }
  
-// Inicializa b y d a la diagonal de a
+// Inicializa b y d a la diagonal la matriz
  
    for (ip = 0; ip < n; ip++) {  
  
@@ -598,21 +537,21 @@ int i, j, ip, iq, nrot, n;
  
    nrot = 0;
  
-   for (i = 0; i < 50; i++) {
+   for (i = 0; i < 100; i++) {
  
       sm = 0;
- 
+						//Se busca diagonilazar el triangulo superior derecho
       for (ip = 0; ip < n - 1; ip++) {
  
          for (iq = ip + 1; iq < n; iq++) {
  
-            sm +=fabs(f[ip][iq]);
+            sm +=fabs(f[ip][iq]); // = fabs(f[ip][iq + 1]); y poner arriba iq = ip
  
          }
  
       }
  
-      if (sm == 0) break;
+      if (sm == 0) break;  //Ya estan todos los valores superiores a la dp en 0 => diagonalizadosxGauss
  
       if (i < 4)
  
@@ -628,7 +567,7 @@ int i, j, ip, iq, nrot, n;
  
             g = 100.0*fabs(f[ip][iq]);
  
-            if(i>4 && (double)(fabs(d[ip])+g) == (double)fabs(d[ip])
+            if(i>4 && (double)(fabs(d[ip])+g) == (double)fabs(d[ip]) //Solo se cumplira con g=0
  
                && (double)(fabs(d[iq])+g) == (double)fabs(d[iq]))
  
@@ -752,10 +691,27 @@ int i, j, ip, iq, nrot, n;
        
         }
  
-		return NULL;
+		//return NULL;
    }  
  
-
+		return m;
 }
-*/
 
+
+float determinanteCuadradas(Matrix * mat)
+{
+	//n: orden de la matrix
+int i,j,k,l = 0,n,m;
+float det;
+n = mat->rows;
+m = n -1;
+det=mat->data[1][1]; 
+for(k=1;k<=m;k++) 
+{ l=k+1; 
+for(i=l;i<=n;i++) 
+{ for(j=l;j<=n;j++) 
+mat->data[i][j] = ( mat->data[k][k]*mat->data[i][j]-mat->data[k][j]*mat->data[i][k] )/mat->data[k][k]; } 
+det=det*mat->data[k+1][k+1]; 
+}
+return det;
+}

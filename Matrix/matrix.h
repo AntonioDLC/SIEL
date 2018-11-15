@@ -34,6 +34,7 @@ Matrix * getTraspuesta(Matrix * m);
 //Hacer producto con matrix_mult()
 float obtenerRadioEspectral(Matrix * m);
 float determinanteCuadradas(Matrix * mat);
+Matrix * autovalores(Matrix * ma);
 //float determinanteCuadradas(Matrix *mat, int orden);
 //Habra metodos aux para obtener lo necesario para los autovalores 
 

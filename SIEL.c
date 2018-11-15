@@ -216,11 +216,7 @@ int main(int argc, char * argv[])
 	float cota_error;
 	int una_mas = 0, decimales;
 
-	mAB = obtenerMatrizDeUsuario();
-	getABfromMatrix(mAB, &mA, &mB);
-	float det = determinanteCuadradas(mA);
-	printf("%f",det);
-		/*
+
 	puts("===== SIEL =====");
 	
 	do
@@ -258,7 +254,7 @@ int main(int argc, char * argv[])
 	}
 	while( una_mas );
 
-	//calcularNorma2(mAB);*/
+	//calcularNorma2(mAB);
 
 	freeMatrix(mAB);
 	
