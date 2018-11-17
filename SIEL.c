@@ -17,7 +17,7 @@ char * getUserInput(void)
 
 	userInput = realloc( userInput, i + 1 );
 	userInput[i] = '\0';
-
+	fflush(stdin);
 	return userInput;
 }
 
@@ -27,9 +27,9 @@ Matrix * obtenerMatrizDeUsuario()
 	"\nINGRESE EL PATH A SU MATRIZ AQUI --->"
 	);
 
-	char * path;
+	char * path = NULL;
 	path = getUserInput();
-
+	
 	Matrix * mAB;
 
 	do
@@ -83,8 +83,7 @@ Matrix * obtenerMatrizDeUsuario()
 	}	
 	while(!mAB );
 
-	puts("Genial.");
-
+	//puts("Genial.");
 	return mAB;
 }
 
@@ -140,6 +139,7 @@ int obtenerCantidadDeDecimales(void)
 
 	decs = getUserInput();
 	rtdo = atoi(decs);
+
 	
 	free(decs);
 
@@ -161,6 +161,97 @@ float obtenerCotaDeErrorDeUsuario(void)
 	return rtdo;
 }
 
+
+void menu(void)
+{
+	Matrix * mAB = NULL, * mA, * mB, * X0;
+	Dominancia dom;
+	Metodo_X * metodo_X;
+	float cota_error;
+	int una_mas = 0, decimales;
+	int operacion=0;
+	float norma;	
+	mAB = obtenerMatrizDeUsuario();
+	getABfromMatrix(mAB, &mA, &mB);
+		
+	puts("Ingrese el numero de operacion a realizar:");	
+
+	puts("1-Seleccionar un método para resolver el sistema");
+	puts("2-Calcular norma 1");
+	puts("3-Calcular norma 2");
+	puts("4-Calcular norma infinito");
+	puts("5-Salir");
+
+	scanf("%i", &operacion);
+	fflush(stdin);
+
+	switch(operacion)
+	{
+		case 1:
+		dom = diagonalmenteDominante(mA);
+		while(!dom)
+		{
+			freeMatrix(mA);
+			freeMatrix(mB);
+			freeMatrix(mAB);
+				puts("Su matrix no es diagonalmente dominante");
+				puts("Modifiquela hasta que lo sea");
+				
+			mAB = obtenerMatrizDeUsuario();
+			getABfromMatrix(mAB, &mA, &mB);
+			dom = diagonalmenteDominante(mA);
+		}
+		metodo_X = obtenerMetodoDeUsuario();
+		X0 = obtenerVectorInicialDeUsuario();
+		decimales = obtenerCantidadDeDecimales();
+		cota_error = obtenerCotaDeErrorDeUsuario();
+		metodo_resolver(mA, mB, X0, metodo_X, cota_error, decimales);	
+		break;
+		case 2:
+		norma = calcularNorma1(mA);
+		printf("Resultado: %f\n",norma);
+		break;
+		case 3:
+		norma = calcularNorma2(mA);
+		printf("Resultado: %f\n",norma);
+		break;
+		case 4:
+		norma = calcularNormaInf(mA);
+		printf("Resultado: %f\n",norma);
+		break;
+		case 5:
+						puts("Saliendo de SIEL");
+						exit(-1);
+		break;
+		default:
+		puts("Operacion no valida. Ingrese una operacion valida");
+	}
+
+	freeMatrix(mAB);
+	
+	puts("Para realizar otra operacion ingrese 1, de lo contrario presione 2");
+
+	scanf("%i", &operacion);
+	fflush(stdin);
+
+	if(operacion != 1)
+	{
+		puts("Saliendo de SIEL");
+		exit(-1);
+	}
+	menu();
+}
+
+
+
+int main(int argc, char * argv[])
+{	
+	puts("===== SIEL =====");
+	menu();
+	return 0;
+}
+
+/*
 Metodo_X * preguntarSiDeseaUsarOtroMetodo(void)
 {
 	puts("Ud. desea resolver el mismo sistema por otro metodo");
@@ -207,57 +298,4 @@ int preguntarSiDeseaResolverOtraMatriz(void)
 
 	return rtdo;
 }
-
-int main(int argc, char * argv[])
-{	
-	Matrix * mAB, * mA, * mB, * X0;
-	Dominancia dom;
-	Metodo_X * metodo_X;
-	float cota_error;
-	int una_mas = 0, decimales;
-
-
-	puts("===== SIEL =====");
-	
-	do
-	{
-		do
-		{
-			mAB = obtenerMatrizDeUsuario();
-			getABfromMatrix(mAB, &mA, &mB);
-			dom = diagonalmenteDominante(mA);
-			if(!dom)
-			{
-				puts("Su matrix no es diagonalmente dominante");
-				puts("Modifiquela hasta que lo sea");
-				freeMatrix(mA);
-				freeMatrix(mB);
-				freeMatrix(mAB);
-			}
-		}		
-		while(!dom);
-
-
-		metodo_X = obtenerMetodoDeUsuario();
-		X0 = obtenerVectorInicialDeUsuario();
-		decimales = obtenerCantidadDeDecimales();
-		cota_error = obtenerCotaDeErrorDeUsuario();
-
-		do
-		{
-			metodo_resolver(mA, mB, X0, metodo_X, cota_error, decimales);
-			metodo_X = preguntarSiDeseaUsarOtroMetodo();
-		}
-		while( metodo_X != NULL );
-
-		una_mas = preguntarSiDeseaResolverOtraMatriz();
-	}
-	while( una_mas );
-
-	//calcularNorma2(mAB);
-
-	freeMatrix(mAB);
-	
-
-	return 0;
-}
+*/

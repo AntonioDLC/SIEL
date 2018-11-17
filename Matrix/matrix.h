@@ -28,8 +28,8 @@ void printDom(Matrix * m);
 float calcularNormaInf(Matrix * m);
 
 //Norma 2
-double calcularNorma2(Matrix * m);
-double calcularNorma1(Matrix * m);
+float calcularNorma2(Matrix * m);
+float calcularNorma1(Matrix * m);
 Matrix * getTraspuesta(Matrix * m);
 //Hacer producto con matrix_mult()
 float obtenerRadioEspectral(Matrix * m);

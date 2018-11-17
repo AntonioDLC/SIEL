@@ -13,5 +13,4 @@ fileToString.o : fileToString.h
 array.o : array.h
 
 clean:
-	rm SIEL
 	rm *.o

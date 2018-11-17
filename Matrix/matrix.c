@@ -400,36 +400,30 @@ Matrix * getTraspuesta(Matrix * m)
 }
 
 //Proced: Obtener la m traspuesta mt, multiplicar m y mt, obtener el radioEsp, hacer raiz(radioEsp)
-double calcularNorma2(Matrix * m)
+float calcularNorma2(Matrix * m)
 {
-	Matrix * nula = NULL; //Ver de eliminarla en lo posible
-	Matrix * c;// = matrix_new(m->rows,m->columns - 1);
-
-	getABfromMatrix(m,&c,&nula);
-	freeMatrix(nula);
-
-	//printMatrix(c);
-
+	
 	//Se añade el caso para que solo pueda ser cuadrada la matriz.
-	if(c->rows != c->columns)
+	if(m->rows != m->columns)
 	{
 		printf("Error no se puede calcular la norma 2 de una matriz no cuadrada");
 		return -1;
 	}
 
 	Matrix * traspuesta;// = matrix_new(c->columns,c->rows);
-	traspuesta = getTraspuesta(c);
+	traspuesta = getTraspuesta(m);
 	
 	//printMatrix(traspuesta);
 
 	Matrix * producto;// = matrix_new(traspuesta->rows,c->columns);
-	producto = matrix_mult(traspuesta,c);
-	freeMatrix(traspuesta);
-	freeMatrix(c);
-
+	producto = matrix_mult(traspuesta,m);
+	
 	//printMatrix(producto);
 
 	float radioEspectral = obtenerRadioEspectral(producto);
+
+	freeMatrix(traspuesta);
+	freeMatrix(producto);
 	
 	return sqrt(radioEspectral);
 }
@@ -453,8 +447,8 @@ float obtenerRadioEspectral(Matrix * m)
 	return max;
 }
 
-double calcularNorma1(Matrix * m){
-	double maximo = 0,sum;
+float calcularNorma1(Matrix * m){
+	float maximo = 0,sum;
 		int i, j;
 
 	for( i = 0; i < m->columns; i++)
