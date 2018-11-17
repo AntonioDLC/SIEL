@@ -455,7 +455,7 @@ float calcularNorma1(Matrix * m){
 	{
 		sum = 0;
 		for( j = 0; j < m->rows; j++)
-			sum += fabs(m->data[i][j]);
+			sum += fabs(m->data[j][i]);
 
 		if( sum > maximo )	maximo = sum;
 	}

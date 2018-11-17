@@ -8,16 +8,16 @@ char * getUserInput(void)
 {
 	char c, * userInput = NULL;
 	int i = 0;
-
 	while( ( c = getchar() ) != '\n' )
 	{
+		
 		userInput = realloc( userInput, i + 1 );
 		userInput[i++] = c;
 	}
 
 	userInput = realloc( userInput, i + 1 );
 	userInput[i] = '\0';
-	fflush(stdin);
+
 	return userInput;
 }
 
@@ -89,12 +89,14 @@ Matrix * obtenerMatrizDeUsuario()
 
 Metodo_X * obtenerMetodoDeUsuario(void)
 {
+	
 	puts("INGRESE EL NRO DEL METODO A UTILIZAR");
 	puts("1. Jacobi");
 	puts("2. Gauss-Seidel");
 
 	char * rta;
 	Metodo_X * met;
+	rta = getUserInput();
 
 	do
 	{
@@ -239,6 +241,7 @@ void menu(void)
 		puts("Saliendo de SIEL");
 		exit(-1);
 	}
+	getUserInput(); //Evita leer el enter anterior
 	menu();
 }
 
